@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ebola_90d_figures
+#SBATCH --account=jandr
 #SBATCH --output=slurm_logs/slurm_%A_%a.out
 #SBATCH --error=slurm_logs/slurm_%A_%a.err
 #SBATCH --array=1-50
