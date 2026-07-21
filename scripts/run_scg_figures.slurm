@@ -10,7 +10,14 @@
 #SBATCH --partition=batch
 
 echo "Starting SLURM task $SLURM_ARRAY_TASK_ID on $(hostname)..."
-cd /home/groups/jandr/bundibugyo-ebov-vaccination/scripts || cd ~/bundibugyo-ebov-vaccination/scripts
+cd /home/groups/jandr/bundibugyo-ebov-vaccination || cd ~/bundibugyo-ebov-vaccination
+
+# Build C++ extension module if missing
+python3 setup_cpp_engine.py build_ext --inplace
+
+export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/scripts
+
+cd scripts
 python3 generate_fig3_spaghetti_90d.py --array-id $SLURM_ARRAY_TASK_ID
 python3 generate_fig4_contours_90d.py --array-id $SLURM_ARRAY_TASK_ID
 python3 generate_fig5_timing_dose_90d.py --array-id $SLURM_ARRAY_TASK_ID
