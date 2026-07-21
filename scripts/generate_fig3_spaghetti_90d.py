@@ -5,11 +5,11 @@ import time
 import argparse
 import numpy as np
 import pandas as pd
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+script_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(script_dir)
+sys.path.insert(0, script_dir)
+sys.path.insert(0, repo_root)
 
 from ebola_stochastic_ring import generate_network
 import ebola_stochastic_ring_cpp as cpp
@@ -32,7 +32,8 @@ def main():
 
     cpp_engine = cpp.EbolaEngine(N, offsets, edges)
 
-    with open("../data_and_results/fitted_parameters.json", "r") as f:
+    param_file = os.path.join(repo_root, "data_and_results", "fitted_parameters.json")
+    with open(param_file, "r") as f:
         params = json.load(f)
     rt_array = params.get("Rt_array", [2.58]*50)
     rt_arr_padded = list(rt_array) + [rt_array[-1]] * 40
@@ -78,10 +79,10 @@ def main():
                 'vaccines': res[2]
             })
 
-    out_dir = "../data_and_results/fig3_chunks"
+    out_dir = os.path.join(repo_root, "data_and_results", "fig3_chunks")
     os.makedirs(out_dir, exist_ok=True)
     df_out = pd.DataFrame(sim_data)
-    df_out.to_csv(f"{out_dir}/fig3_chunk_{args.array_id}.csv", index=False)
+    df_out.to_csv(os.path.join(out_dir, f"fig3_chunk_{args.array_id}.csv"), index=False)
     print(f"Finished Fig 3 task {args.array_id}")
 
 if __name__ == '__main__':
