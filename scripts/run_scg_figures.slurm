@@ -10,7 +10,9 @@
 #SBATCH --partition=batch
 
 echo "Starting SLURM task $SLURM_ARRAY_TASK_ID on $(hostname)..."
-cd /home/groups/jandr/bundibugyo-ebov-vaccination || cd ~/bundibugyo-ebov-vaccination
+
+# Navigate to SCG project repository directory
+cd /home/jandr/ebola_vaccination_modeling || cd ~/bundibugyo-ebov-vaccination
 
 # Build C++ extension module if missing
 python3 setup_cpp_engine.py build_ext --inplace
