@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-07-22T18:49:40.666940+00:00",
+  "trajectory_file": "data_and_results/review_outputs/supplementary_calibration_updated_epinow_median_20260722/supplementary_trajectory_arrays.npz",
+  "figures": [
+    "Supplementary_Figure_S1_pooled_review.png",
+    "Supplementary_Figure_S2_pooled_review.png"
+  ],
+  "reported_cases_plotted": false,
+  "note": "Review-only figures; no submission figure was overwritten. S2 contains only 100,000-person simulated trajectories and does not plot DRC-wide notifications."
+}

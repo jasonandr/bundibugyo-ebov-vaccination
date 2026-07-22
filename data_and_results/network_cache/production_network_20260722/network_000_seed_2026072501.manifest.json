@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-07-22T18:34:57.819253+00:00",
+  "network_seed": 2026072501,
+  "N": 100000,
+  "household_mean": 5.2,
+  "community_mean": 30.0,
+  "community_variance": 160.0,
+  "directed_adjacency_entries": 3531826,
+  "network_builder_sha256": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2"
+}

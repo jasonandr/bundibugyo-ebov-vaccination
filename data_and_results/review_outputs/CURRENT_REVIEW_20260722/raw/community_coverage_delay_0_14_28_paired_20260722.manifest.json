@@ -1,0 +1,20 @@
+{
+  "created_utc": "2026-07-22T22:29:32.906392+00:00",
+  "delays_days": [
+    0,
+    14,
+    28
+  ],
+  "coverage": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8
+  ],
+  "replicates": 100,
+  "comparison": "same-seed base operations without vaccination"
+}

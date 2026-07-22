@@ -1,0 +1,23 @@
+{
+  "created_utc": "2026-07-22T18:55:11.757674+00:00",
+  "draws": 200,
+  "replicates_per_draw": 50,
+  "workers": 8,
+  "total_runs_per_strategy": 10000,
+  "network": {
+    "N": 100000,
+    "household_mean": 5.2,
+    "community_mean": 30.0,
+    "community_variance": 160.0,
+    "network_seed": 2026072501,
+    "cache_path": "data_and_results/production_network_cache_20260722/network_000_seed_2026072501.npz"
+  },
+  "allocator": "daily pooled onset cohort",
+  "waiting_times": "Gamma; LHS shapes Uniform(1,3)",
+  "rt_source": "fitted-median",
+  "cpp_sha256": "a5a915038af24a48828a2bcc9b09fe23a3c3486e31e402abe64cbe270d573606",
+  "wrapper_sha256": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2",
+  "fitted_parameters_sha256": "a9b9aab9d6b39c79a37dea12bc6ba620f509e9b03202bfaefdaf4f9864a104ed",
+  "rt_posterior_sha256": null,
+  "note": "Pilot only. Community-degree variance is held at 160 because network topology is fixed within this pilot."
+}

@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-07-22T18:49:32.670707+00:00",
+  "purpose": "review-only S1/S2 trajectories",
+  "trajectories": 100,
+  "horizon_days": 90,
+  "rt_source": "fitted-median",
+  "initial_state": {
+    "infectious": 15,
+    "exposed": 15
+  },
+  "network_cache": "data_and_results/production_network_cache_20260722/network_000_seed_2026072501.npz",
+  "allocator": "daily pooled onset cohort",
+  "waiting_times": "Gamma; PSA-sampled means and shapes",
+  "cpp_sha256": "a5a915038af24a48828a2bcc9b09fe23a3c3486e31e402abe64cbe270d573606",
+  "wrapper_sha256": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2",
+  "fitted_parameters_sha256": "a9b9aab9d6b39c79a37dea12bc6ba620f509e9b03202bfaefdaf4f9864a104ed",
+  "rt_posterior_sha256": null
+}

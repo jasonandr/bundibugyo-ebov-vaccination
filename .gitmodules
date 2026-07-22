@@ -1,0 +1,3 @@
+[submodule "BDBV2026-Data"]
+	path = BDBV2026-Data
+	url = https://github.com/INRB-UMIE/BDBV2026-Data
