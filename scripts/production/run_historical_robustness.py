@@ -253,7 +253,7 @@ def main():
         },
         "engine": "cpp (pooled daily onset-cohort allocator, use_cohort default)",
         "network": {
-            "generator": "generate_network (two-layer DHS 2013-14 household + negative-binomial community)",
+            "generator": "generate_network (two-layer DHS household + negative-binomial community)",
             "N": N,
             "household_mean": 5.2,
             "community_mean": 30.0,

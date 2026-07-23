@@ -24,7 +24,7 @@ def generate_network(N=10000, household_mean=5.0, community_mean=5.0, community_
             hh_size = np.random.poisson(max(household_mean - 1.0, 0.1)) + 1
         else:
             if household_size_dist is None:
-                # DRC DHS 2013-14 approximate household size distribution (1 to 10+)
+                # DRC DHS approximate household-size distribution (1 to 10+)
                 household_size_dist = [0.061, 0.097, 0.129, 0.147, 0.145, 0.128, 0.103, 0.076, 0.049, 0.065]
             # Normalize to ensure sum is 1.0
             household_size_dist = np.array(household_size_dist) / sum(household_size_dist)

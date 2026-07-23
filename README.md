@@ -12,7 +12,7 @@ sensitivity analyses.
 ## Model overview
 
 - Individual-based SEIR model on a two-layer contact network (100,000
-  persons): fully connected household/caregiving clusters (2013–14 DRC
+  persons): fully connected household/caregiving clusters (DRC DHS
   household-size distribution, mean ≈5.1) and a negative-binomial community
   layer (mean degree 30.0, variance 160.0).
 - Time-varying transmission follows a daily effective reproduction number
