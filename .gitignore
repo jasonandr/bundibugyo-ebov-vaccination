@@ -54,18 +54,10 @@ media/
 handover.md
 drc_*refs*.json
 drc_*abstracts.json
-data_and_results/manuscript_*
-fix_manuscript*.py
-generate_responses.py
-manuscript_text.txt
 revision_working_*/
-run_reviewer_wait.sh
 scratch/
-scratch_codex_review.txt
 scripts/manuscript_tools/
 scripts/summarize_manuscript_results.py
-update_reviewer1_comment3_july13.py
-wait_script_reviewer.log
 
 manuscript/
 
