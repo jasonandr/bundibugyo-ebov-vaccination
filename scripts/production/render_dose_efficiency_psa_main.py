@@ -1,9 +1,9 @@
-"""Render the main-text dose-efficiency figure (Figure 5).
+"""Render the dose-efficiency figure (Figure 5).
 
 Improvements over the review render (render_dose_efficiency_psa.py):
   - Panel B honestly labelled "Deaths averted" (comparator detail lives in the
-    manuscript figure legend, not on the figure).
-  - Panel C retitled "Dose efficiency" to match manuscript terminology.
+    figure legend, not on the figure).
+  - Panel C retitled "Dose efficiency".
   - Optional subtle IQR whiskers (across the 200 parameter-draw expected values).
 
 Input: radius-matched matched expected-value PSA (200 draws x 50 replicates).

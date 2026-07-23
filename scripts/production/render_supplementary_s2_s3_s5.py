@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-OUT = Path("figures/current_review/manuscript_review_figures_20260722")
+OUT = Path("figures/final")
 BLUE, TEAL, ORANGE, GRAY = "#2878B5", "#21918C", "#D2694E", "#667085"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10})
 
@@ -25,7 +25,7 @@ def style(ax, grid_axis="y"):
 
 
 # ---------------- S2 ----------------
-z = np.load("data_and_results/review_outputs/supplementary_calibration_updated_epinow_median_20260722/supplementary_trajectory_arrays.npz")
+z = np.load("data_and_results/outputs/supplementary_calibration_updated_epinow_median_20260722/supplementary_trajectory_arrays.npz")
 onset, rt_real, rt_in = z["daily_onset_cases"], z["realized_rt"], z["input_rt"]
 days = np.arange(onset.shape[1])
 cum = np.cumsum(onset, axis=1)
@@ -57,7 +57,7 @@ plt.close(fig)
 print("S2 done")
 
 # ---------------- S3 ----------------
-df = pd.read_csv("archive/2026-07-22_pre_github_cleanup/data_and_results_legacy/superseded_current_review/current_batch_20260722/supp_s3_delivery_raw.csv")
+df = pd.read_csv("data_and_results/outputs/delivery_timing_20260722/supp_s3_delivery_raw.csv")
 order = [s for s in df.strategy.unique()]
 labels = {"ring2_enhanced": "Ring 2 + enhanced", "community40_base": "Community 40%"}
 order = sorted(order, key=lambda s: 0 if "ring" in s else 1)
@@ -104,7 +104,7 @@ ax.legend(frameon=False, fontsize=8.6, loc="lower right")
 style(ax)
 ax.text(-0.09, 1.03, "A", transform=ax.transAxes, fontsize=13, fontweight="bold")
 
-raw = pd.read_csv("data_and_results/review_outputs/immune_onset_paired_1000_20260723/fig4_immune_onset_paired_raw.csv")
+raw = pd.read_csv("data_and_results/outputs/immune_onset_paired_1000_20260723/fig4_immune_onset_paired_raw.csv")
 g = raw.groupby("immune_midpoint")["mortality_reduction_pct"]
 mids = sorted(raw.immune_midpoint.unique())
 med = [g.get_group(m).median() for m in mids]

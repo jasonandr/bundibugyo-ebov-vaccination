@@ -201,7 +201,7 @@ def sha256(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path,
-                        default=REPO / "data_and_results/review_outputs/historical_robustness_production_20260723")
+                        default=REPO / "data_and_results/outputs/historical_robustness_production_20260723")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--replicates", type=int, default=625)
     args = parser.parse_args()

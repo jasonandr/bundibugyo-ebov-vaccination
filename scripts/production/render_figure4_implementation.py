@@ -1,4 +1,4 @@
-"""Render the two-panel community-vaccination implementation Figure 4 review file."""
+"""Render the two-panel community-vaccination implementation Figure 4."""
 import csv
 from pathlib import Path
 
@@ -10,7 +10,7 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[2]
-REVIEW = ROOT / "data_and_results/review_outputs/CURRENT_REVIEW_20260722"
+REVIEW = ROOT / "data_and_results/outputs/paired_figure_grids_20260722"
 
 
 def read(path):

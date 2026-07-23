@@ -1,51 +1,42 @@
 # Bundibugyo ebolavirus vaccination modelling
 
-Reproducibility package for the revised manuscript, *Ring and community
-vaccination for Bundibugyo ebolavirus outbreak response: a stochastic network
-modelling study*.
+Simulation code, data, and outputs for *Ring and community vaccination for
+Bundibugyo ebolavirus outbreak response: a stochastic network modelling study*.
 
-## Active repository layout
+The package contains a stochastic network transmission model of Bundibugyo
+ebolavirus (BDBV) and the code required to reproduce the study's simulation
+experiments and figures: case-detection and contact-tracing scenarios,
+reactive ring vaccination, community vaccination, and probabilistic
+sensitivity analyses.
 
-```text
-scripts/production/                 Production model, runners, and renderers
-data_and_results/                   Locked inputs, network cache, and current outputs
-figures/current_review/             Consolidated Figures 1–5 and supplementary renders
-BDBV2026-Data/                      Public notification-data submodule
-MODEL_REPRODUCIBILITY_LEDGER.md     Dated technical decisions, checks, and provenance
-PSA_PARAMETER_CONCORDANCE_AUDIT_2026-07-22.md
-                                   Locked PSA specification and audit trail
-archive/                           Superseded code, outputs, and session work (excluded from Git)
-```
+## Model overview
 
-This repository contains only the data and code needed to reproduce the analyses
-and figures. Manuscript, supplementary appendix, and reviewer-response documents
-are maintained outside the repository (in Dropbox); `manuscript/` and `*.docx`
-are git-ignored so documents are never committed.
+- Individual-based SEIR model on a two-layer contact network (100,000
+  persons): fully connected household/caregiving clusters (2013–14 DRC
+  household-size distribution, mean ≈5.1) and a negative-binomial community
+  layer (mean degree 30.0, variance 160.0).
+- Time-varying transmission follows a daily effective reproduction number
+  Rt(t) estimated from outbreak notifications with a Bayesian renewal model
+  (Gamma generation interval, mean 15.3 days, SD 9.3 days), allocated through
+  a pooled daily onset-cohort process. Rt is held constant at its final
+  estimated value beyond the 66-day estimation window. The simulation horizon
+  is 90 days, initialized with 15 infectious and 15 exposed individuals.
+- Gamma-distributed incubation (mean 8.5 days) and infectious (mean 6.0 days)
+  periods; baseline case fatality risk 45.4%.
+- Operational scenarios: base operations (30% case detection, 30% contact
+  tracing) and enhanced operations (70% detection, 80% tracing); reactive
+  ring vaccination (Ring 1 and Ring 2); community vaccination at 20–80%
+  coverage.
+- Principal analyses use 200 Latin-hypercube parameter draws with 50 matched
+  stochastic replicates per strategy (10,000 simulations per strategy).
 
-The `archive/` directory is intentionally excluded from Git. It is retained
-locally for audit and recovery, but must not be used to regenerate manuscript
-results.
+## Requirements
 
-## Locked current model specification
+Python 3.13, the packages in `requirements.txt`, a C++17 compiler, and
+pybind11. Public outbreak notification data are provided via the
+`BDBV2026-Data` submodule.
 
-- 100,000-person two-layer network: household mean 5.2; community mean 30.0;
-  community-degree variance 160.0.
-- Daily onset-cohort pooled allocation driven by the 66-day updated EpiNow2
-  median `Rt_array` in `data_and_results/fitted_parameters.json`.
-- Initial state: 15 infectious and 15 exposed persons; 90-day horizon.
-- Gamma-distributed incubation and infectious waiting times.
-- Base operations: 30% detection and 30% contact tracing. Enhanced operations:
-  70% detection and 80% contact tracing, with the documented ramp.
-- Figure 2 and dose-efficiency PSA: 200 Latin-hypercube parameter draws × 50
-  matched stochastic replicates per strategy.
-
-The authoritative detailed record is
-[`MODEL_REPRODUCIBILITY_LEDGER.md`](MODEL_REPRODUCIBILITY_LEDGER.md).
-
-## Reproduce the current outputs
-
-Install the Python dependencies in `requirements.txt`, initialise the public
-data submodule, and compile the pybind extension from the production source.
+## Building
 
 ```bash
 git submodule update --init BDBV2026-Data
@@ -55,22 +46,41 @@ c++ -O3 -shared -std=c++17 -fPIC $(python3 -m pybind11 --includes) \
   -o "ebola_stochastic_ring_cpp$(python3-config --extension-suffix)"
 ```
 
-The active runners accept explicit output paths and refuse to overwrite prior
-artifacts. Current inputs, raw outputs, and run manifests are retained under
-`data_and_results/review_outputs/` (Figure 2 PSA, radius-matched dose-efficiency
-PSA, Figures 3–4 paired grids, calibration trajectories, extinction analysis,
-immune-onset sensitivity, historical robustness, and the fine independent-VE
-grid). The consolidated figure package is in
-`figures/current_review/manuscript_review_figures_20260722/`.
+## Reproducing analyses
 
-## Current figures
+Simulation runners in `scripts/production/` write raw replicate-level output,
+summaries, and a manifest (parameters, random seeds, code hashes, run date)
+to `data_and_results/outputs/`. Runners take an explicit output directory
+and refuse to overwrite existing outputs. Renderers in the same directory
+regenerate the figures in `figures/final/`.
 
-- Figure 1: updated outbreak input (reproduction-number estimation) and model schematic.
-- Figure 2: probabilistic-sensitivity-analysis forest plot (200 draws × 50 replicates).
-- Figure 3: paired operational and community-effect grids; Panel C is the
-  contact-only risk-compensation sensitivity.
-- Figure 4: paired community-vaccination coverage and initiation timing.
-- Figure 5: radius-matched dose-efficiency comparison (median with IQR whiskers).
-- Supplementary Figures S1–S5: historical outbreak dynamics, model calibration,
-  vaccination timing among eventual cases, independent infection/mortality
-  efficacy grid, and immune-onset timing sensitivity.
+| Runner | Analysis |
+|---|---|
+| `run_pooled_psa_figure2_pilot.py` | Figure 2 probabilistic sensitivity analysis (200 draws × 50 replicates) |
+| `run_figure3_paired_grids.py` | Figure 3 operational, vaccine-effect, and risk-compensation grids |
+| `run_figure4_community_timing_paired.py` | Figure 4 coverage and initiation-timing analyses |
+| `run_extinction_paired.py` | Early-extinction analysis (4 strategies × 500 paired replicates) |
+| `run_paired_figure3c_figure4c.py` | Risk-compensation and immune-onset paired analyses |
+| `run_historical_robustness.py` | Historical robustness (2007 and 2012 outbreaks) |
+| `run_s4_independent_ve.py` | Independent infection/mortality vaccine-efficacy grid |
+| `build_production_network_cache.py` | Build the cached 100,000-person network |
+| `generate_pooled_supplementary_calibration.py` | Calibration trajectories (Supplementary Figure S2) |
+| `estimate_rt.py` | Reproduction-number estimation from notification data |
+
+## Repository layout
+
+```text
+scripts/production/    Model engine, network generator, runners, renderers
+data_and_results/      Model inputs and simulation outputs
+  fitted_parameters.json  Calibrated parameters (Rt trajectory, CFR)
+  network_cache/          Fixed 100,000-person network and its manifest
+  outputs/                Simulation outputs with run manifests
+figures/final/         Figures 1–5 and Supplementary Figures S1–S5
+BDBV2026-Data/         Public outbreak notification data (submodule)
+```
+
+## Data availability
+
+Public outbreak notification data are included via the `BDBV2026-Data`
+submodule. All simulation outputs needed to reproduce the figures are
+included in `data_and_results/outputs/`.

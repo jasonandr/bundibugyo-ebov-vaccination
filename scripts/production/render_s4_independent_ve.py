@@ -11,9 +11,9 @@ from scipy.ndimage import gaussian_filter
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
-SUMMARY = REPO / "data_and_results/review_outputs/s4_independent_ve_fine_20260723/s4_grid_summary.csv"
+SUMMARY = REPO / "data_and_results/outputs/s4_independent_ve_fine_20260723/s4_grid_summary.csv"
 import os
-OUT = REPO / os.environ.get("S4_OUT", "figures/current_review/manuscript_review_figures_20260722/Supplementary_Figure_S4_Independent_VE.png")
+OUT = REPO / os.environ.get("S4_OUT", "figures/final/Supplementary_Figure_S4.png")
 
 PROBE_CELLS = [(0.15, 0.0), (0.15, 0.9), (0.0, 0.0), (0.0, 0.9), (0.45, 0.45)]
 

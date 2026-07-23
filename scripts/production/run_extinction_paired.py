@@ -1,4 +1,4 @@
-"""Paired early-extinction analysis for the manuscript.
+"""Paired early-extinction analysis.
 
 Four strategies are evaluated with matched simulation seeds on the cached
 100,000-person production network.  Each replicate uses the C++ engine with
@@ -178,7 +178,7 @@ def run():
     parser.add_argument("--replicates", type=int, default=500)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--output-dir", type=Path,
-                        default=REPO / "data_and_results" / "review_outputs" / "extinction_paired_20260723")
+                        default=REPO / "data_and_results" / "outputs" / "extinction_paired_20260723")
     args = parser.parse_args()
     if args.replicates < 1 or args.workers < 1:
         raise ValueError("Use at least one replicate and one worker")

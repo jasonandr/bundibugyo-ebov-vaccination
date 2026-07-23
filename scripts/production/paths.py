@@ -4,7 +4,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = PROJECT_ROOT / "data_and_results"
-FIGURE_DIR = PROJECT_ROOT / "figures" / "current_review"
+FIGURE_DIR = PROJECT_ROOT / "figures" / "final"
 
 
 def ensure_dir(path: Path) -> Path:

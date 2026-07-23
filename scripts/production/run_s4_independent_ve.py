@@ -88,7 +88,7 @@ def run():
         REPO / "data_and_results/network_cache/production_network_20260722"
         / "network_000_seed_2026072501.npz"))
     parser.add_argument("--output-dir", type=Path, default=(
-        REPO / "data_and_results/review_outputs/s4_independent_ve_fine_20260723"))
+        REPO / "data_and_results/outputs/s4_independent_ve_fine_20260723"))
     parser.add_argument("--smoke", action="store_true",
                         help="3 replicates x 2 probe cells + base arm, no summary/manifest")
     args = parser.parse_args()
