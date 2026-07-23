@@ -78,6 +78,8 @@ def main():
     parser.add_argument("--network-cache", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--replicates", type=int, default=100)
+    parser.add_argument("--midpoints", type=float, nargs="+", default=[5, 10, 14],
+                        help="Immune-onset midpoints (days) for the Figure 4C sensitivity.")
     parser.add_argument("--fig4-only", action="store_true", help="Run only the common-seed Figure 4C sensitivity.")
     args = parser.parse_args()
     if args.output_dir.exists():
@@ -92,7 +94,7 @@ def main():
                 "coverage": .4, "ve_i": float(ve), "ve_m": float(ve),
                 "risk": float(risk), "radius": 2, "max_vaccines": 0,
             }, args.replicates, 2026700000 + len(tasks) * 1000))
-    for midpoint in (5, 10, 14):
+    for midpoint in args.midpoints:
         tasks.append(("fig4_immune_onset", {
             "radius": 2, "max_vaccines": None, "immune_midpoint": float(midpoint),
             "ve_i": .45, "ve_m": .45,

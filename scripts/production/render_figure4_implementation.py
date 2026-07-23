@@ -81,6 +81,7 @@ def main():
 
     fig.tight_layout()
     fig.savefig(REVIEW / "Figure_4_implementation_review.png", dpi=300, bbox_inches="tight", facecolor="white")
+    fig.savefig(REVIEW / "Figure_4_review.pdf", bbox_inches="tight", facecolor="white")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,96 @@
+{
+  "created_utc": "2026-07-23T04:16:33.562499+00:00",
+  "git_head": "8e1a9ee3e3102cc91b41227ce9495ebad3d4ee63",
+  "code_sha256": {
+    "run_historical_robustness.py": "dc79ec2d835bdb256437d319718b78298e4ef9f6e21301dc11079c0a86176cde",
+    "ebola_stochastic_ring.py": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2",
+    "ebola_stochastic_ring_cpp.cpp": "a7393963bcd1068e6969b1fb3ddfbc4de75cb20459170895b4e6ac6422a53655"
+  },
+  "engine": "cpp (pooled daily onset-cohort allocator, use_cohort default)",
+  "network": {
+    "generator": "generate_network (two-layer DHS 2013-14 household + negative-binomial community)",
+    "N": 10000,
+    "household_mean": 5.2,
+    "community_mean": 30.0,
+    "community_variance": 160.0,
+    "network_seeds": {
+      "bundibugyo_2007": 202607231,
+      "isiro_2012": 202607232
+    },
+    "note": "one network per setting, generated per worker with the fixed seed and reused across all strategies/replicates"
+  },
+  "settings": {
+    "bundibugyo_2007": {
+      "constant_rt": 2.37,
+      "sim_seed_base": 2026081000,
+      "sim_seeds": "2026081000+i for i=0..624"
+    },
+    "isiro_2012": {
+      "constant_rt": 1.33,
+      "sim_seed_base": 2026091000,
+      "sim_seeds": "2026091000+i for i=0..624"
+    }
+  },
+  "replicates_per_strategy": 625,
+  "total_simulations": 5000,
+  "base_parameters": {
+    "baseline_tau": 0.25,
+    "incubation_period": 8.5,
+    "infectious_period": 6.0,
+    "incubation_shape": 2.0,
+    "infectious_shape": 2.0,
+    "base_CFR": 0.4539079029615015,
+    "efficacy": 0.45,
+    "sigmoidal_k": 0.5,
+    "sigmoidal_d0": 10.0,
+    "initial_infected": 15,
+    "initial_exposed": 15,
+    "max_sim_time": 90,
+    "max_daily_traces": 100,
+    "uptake": 0.8,
+    "vaccine_acceptability": 1.0,
+    "allow_pep": true,
+    "ring_radius": 2
+  },
+  "strategies": {
+    "base_ops": {
+      "reporting_rate": "array len 91: 0.3000...0.3000",
+      "tracing_coverage": "array len 91: 0.3000...0.3000",
+      "detection_delay": 4.0,
+      "tracing_delay": 2.0,
+      "max_vaccines": 0
+    },
+    "enhanced_ops": {
+      "reporting_rate": "array len 91: 0.3000...0.7000",
+      "tracing_coverage": "array len 91: 0.3000...0.8000",
+      "detection_delay": 2.0,
+      "tracing_delay": 1.0,
+      "max_vaccines": 0
+    },
+    "enhanced_plus_ring2": {
+      "reporting_rate": "array len 91: 0.3000...0.7000",
+      "tracing_coverage": "array len 91: 0.3000...0.8000",
+      "detection_delay": 2.0,
+      "tracing_delay": 1.0,
+      "max_vaccines": null
+    },
+    "enhanced_plus_comm40": {
+      "reporting_rate": "array len 91: 0.3000...0.7000",
+      "tracing_coverage": "array len 91: 0.3000...0.8000",
+      "detection_delay": 2.0,
+      "tracing_delay": 1.0,
+      "max_vaccines": 0,
+      "community_vax_coverage": 0.4,
+      "community_vax_trigger": 1,
+      "community_vax_delay": 0.0,
+      "community_vax_rollout_days": 14.0
+    }
+  },
+  "comparators": {
+    "base_ops": null,
+    "enhanced_ops": "base_ops",
+    "enhanced_plus_ring2": "enhanced_ops",
+    "enhanced_plus_comm40": "base_ops"
+  },
+  "reductions": "per matched replicate pair (same seed); median and empirical 2.5/97.5 percentiles across replicates; pairs with zero comparator cases/deaths excluded"
+}

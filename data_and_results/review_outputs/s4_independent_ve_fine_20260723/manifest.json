@@ -1,0 +1,37 @@
+{
+  "created_utc": "2026-07-23T04:50:12.316867+00:00",
+  "design": {
+    "grid": "13x13 independent efficacy; ve_i and ve_m in 0, 0.075, ..., 0.90",
+    "replicates_per_cell": 100,
+    "seed_schedule": "2026100000+replicate_id, paired across all cells and base arm",
+    "scenario": "community vaccination, 40% coverage, 14-day rollout from day 0, base operations",
+    "efficacy_mapping": "efficacy=ve_i (infection path, sigmoidal ramp k=0.5 d0=10); vax_CFR=base_CFR*(1-ve_m) (mortality path); infection_efficacy_multiplier=1.0",
+    "base_arm": "base operations, no community vaccination, efficacy 0"
+  },
+  "model": {
+    "incubation_period": 8.5,
+    "infectious_period": 6.0,
+    "incubation_shape": 2.0,
+    "infectious_shape": 2.0,
+    "sigmoidal_k": 0.5,
+    "sigmoidal_d0": 10.0,
+    "initial_infected": 15,
+    "initial_exposed": 15,
+    "max_sim_time": 90,
+    "detection_delay": 4.0,
+    "tracing_delay": 2.0,
+    "reporting_rate": 0.3,
+    "tracing_coverage": 0.3,
+    "max_daily_traces": 100,
+    "uptake": 0.8,
+    "vaccine_acceptability": 1.0,
+    "allow_pep": true,
+    "base_CFR": 0.4539079029615015
+  },
+  "network_cache": "/Users/jasonandrews/repos/ebola vaccination modeling/data_and_results/network_cache/production_network_20260722/network_000_seed_2026072501.npz",
+  "network_cache_sha256": "7fc3a4ad9fe757e363a7810c8554ade97162aae3cc423dab0f8caf2a642fe0ec",
+  "cpp_sha256": "a7393963bcd1068e6969b1fb3ddfbc4de75cb20459170895b4e6ac6422a53655",
+  "wrapper_sha256": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2",
+  "fitted_parameters_sha256": "a9b9aab9d6b39c79a37dea12bc6ba620f509e9b03202bfaefdaf4f9864a104ed",
+  "workers": 8
+}

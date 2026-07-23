@@ -25,7 +25,11 @@ def median_deaths(rows):
     key="deaths" if "deaths" in rows[0] else "scenario_deaths"
     return np.median([f(r,key) for r in rows])
 def reduction(rows, comparator): return 100*(comparator-median_deaths(rows))/comparator
-def save(fig,path): fig.tight_layout(); fig.savefig(path,dpi=300,bbox_inches="tight",facecolor="white"); plt.close(fig)
+def save(fig,path):
+    fig.tight_layout(); fig.savefig(path,dpi=300,bbox_inches="tight",facecolor="white")
+    pdf = path.with_suffix(".pdf") if hasattr(path, "with_suffix") else None
+    if pdf is not None: fig.savefig(pdf, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
 
 
 def main():

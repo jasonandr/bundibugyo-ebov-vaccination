@@ -9,15 +9,18 @@ modelling study*.
 ```text
 scripts/production/                 Production model, runners, and renderers
 data_and_results/                   Locked inputs, network cache, and current outputs
-figures/current_review/             Consolidated Figures 1–4 and dose-efficiency render
-manuscript/current/                 Current tracked manuscript, appendix, and responses
+figures/current_review/             Consolidated Figures 1–5 and supplementary renders
 BDBV2026-Data/                      Public notification-data submodule
 MODEL_REPRODUCIBILITY_LEDGER.md     Dated technical decisions, checks, and provenance
 PSA_PARAMETER_CONCORDANCE_AUDIT_2026-07-22.md
                                    Locked PSA specification and audit trail
-archive/2026-07-22_pre_github_cleanup/
-                                   Superseded code, outputs, draft documents, and scratch work
+archive/                           Superseded code, outputs, and session work (excluded from Git)
 ```
+
+This repository contains only the data and code needed to reproduce the analyses
+and figures. Manuscript, supplementary appendix, and reviewer-response documents
+are maintained outside the repository (in Dropbox); `manuscript/` and `*.docx`
+are git-ignored so documents are never committed.
 
 The `archive/` directory is intentionally excluded from Git. It is retained
 locally for audit and recovery, but must not be used to regenerate manuscript
@@ -39,7 +42,7 @@ results.
 The authoritative detailed record is
 [`MODEL_REPRODUCIBILITY_LEDGER.md`](MODEL_REPRODUCIBILITY_LEDGER.md).
 
-## Reproduce the current review outputs
+## Reproduce the current outputs
 
 Install the Python dependencies in `requirements.txt`, initialise the public
 data submodule, and compile the pybind extension from the production source.
@@ -53,18 +56,21 @@ c++ -O3 -shared -std=c++17 -fPIC $(python3 -m pybind11 --includes) \
 ```
 
 The active runners accept explicit output paths and refuse to overwrite prior
-artifacts. Current inputs and result manifests are retained under
-`data_and_results/review_outputs/`. The consolidated visual package is in
+artifacts. Current inputs, raw outputs, and run manifests are retained under
+`data_and_results/review_outputs/` (Figure 2 PSA, radius-matched dose-efficiency
+PSA, Figures 3–4 paired grids, calibration trajectories, extinction analysis,
+immune-onset sensitivity, historical robustness, and the fine independent-VE
+grid). The consolidated figure package is in
 `figures/current_review/manuscript_review_figures_20260722/`.
 
-## Current candidate figures
+## Current figures
 
-- Figure 1: updated EpiNow2 outbreak input and model schematic.
-- Figure 2: updated-EpiNow2 PSA forest plot.
+- Figure 1: updated outbreak input (reproduction-number estimation) and model schematic.
+- Figure 2: probabilistic-sensitivity-analysis forest plot (200 draws × 50 replicates).
 - Figure 3: paired operational and community-effect grids; Panel C is the
   contact-only risk-compensation sensitivity.
 - Figure 4: paired community-vaccination coverage and initiation timing.
-- Supplementary Figure S3: radius-matched dose-efficiency comparison.
-
-All figures in this package are review candidates, not automatically promoted
-to the submission directory.
+- Figure 5: radius-matched dose-efficiency comparison (median with IQR whiskers).
+- Supplementary Figures S1–S5: historical outbreak dynamics, model calibration,
+  vaccination timing among eventual cases, independent infection/mortality
+  efficacy grid, and immune-onset timing sensitivity.
