@@ -6,24 +6,38 @@ from pathlib import Path
 
 import numpy as np
 
-from ebola_stochastic_ring import generate_network
+from ebola_stochastic_ring import generate_network, generate_network_clustered
+
+CLUSTERED_DEFAULTS = {
+    "cluster_mean": 45.0, "cluster_sd": 15.0,
+    "inner_lambda": 1.2, "inner_size_mean": 7.0, "inner_size_sd": 2.0,
+    "stub_mean": 3.0, "stub_var": 120.0,
+}
 
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build_network_cache(cache_path, *, n, household_mean, community_mean, community_variance, seed):
+def build_network_cache(cache_path, *, n, household_mean, community_mean, community_variance, seed,
+                        topology="original", clustered_params=None):
     """Generate one topology and save CSR adjacency arrays; never overwrite."""
     cache_path = Path(cache_path)
     manifest_path = cache_path.with_suffix(".manifest.json")
     if cache_path.exists() or manifest_path.exists():
         raise FileExistsError(f"Refusing to overwrite network cache: {cache_path}")
-    np.random.seed(seed)
-    graph = generate_network(
-        n, household_mean=household_mean, community_mean=community_mean,
-        community_variance=community_variance,
-    )
+    if topology == "clustered":
+        params = dict(CLUSTERED_DEFAULTS)
+        if clustered_params:
+            params.update(clustered_params)
+        graph = generate_network_clustered(n, seed=seed, **params)
+    else:
+        params = None
+        np.random.seed(seed)
+        graph = generate_network(
+            n, household_mean=household_mean, community_mean=community_mean,
+            community_variance=community_variance,
+        )
     offsets = np.zeros(n + 1, dtype=np.int32)
     edge_parts = []
     edge_count = 0
@@ -40,6 +54,8 @@ def build_network_cache(cache_path, *, n, household_mean, community_mean, commun
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "network_seed": seed, "N": n, "household_mean": household_mean,
         "community_mean": community_mean, "community_variance": community_variance,
+        "topology": topology,
+        "clustered_params": params,
         "directed_adjacency_entries": int(len(edges)),
         "network_builder_sha256": sha256(Path(__file__).with_name("ebola_stochastic_ring.py")),
     }

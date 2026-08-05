@@ -1,0 +1,22 @@
+{
+  "created_utc": "2026-08-04T13:47:07.216830+00:00",
+  "purpose": "review-only regenerated S1/S2",
+  "trajectories": 100,
+  "horizon_days": 90,
+  "scenario": "no vaccination; base operations (30% detection, 30% tracing)",
+  "initial_state": {
+    "infectious": 15,
+    "exposed": 15
+  },
+  "network_cache": "../../data_and_results/network_cache/production_network_clustered_20260803/network_000_seed_2026080301.npz",
+  "network": "100,000 persons; household 5.2; community 30.0; variance 160.0",
+  "rt": "one EpiNow2 posterior trajectory per LHS draw",
+  "waiting_times": "Gamma; PSA means and shapes",
+  "rt_source": "fitted-median",
+  "allocator": "daily pooled onset cohort",
+  "cpp_sha256": "a7393963bcd1068e6969b1fb3ddfbc4de75cb20459170895b4e6ac6422a53655",
+  "wrapper_sha256": "6904c301d059c62b907c10ead043ab349004edc7d30f5bb64e42e7a18dd2b10c",
+  "fitted_parameters_sha256": "4489da72a931dd6d2df5bfbab61e879b34f77ad7878e1e886eaef7e64b290b49",
+  "rt_posterior_sha256": null,
+  "note": "S2 plots model onsets and reported confirmed cases together for calibration review; they are not identical surveillance quantities."
+}

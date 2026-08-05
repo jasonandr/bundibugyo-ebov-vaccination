@@ -11,10 +11,13 @@ sensitivity analyses.
 
 ## Model overview
 
-- Individual-based SEIR model on a two-layer contact network (100,000
+- Individual-based SEIR model on a nested contact network (100,000
   persons): fully connected household/caregiving clusters (DRC DHS
-  household-size distribution, mean ≈5.1) and a negative-binomial community
-  layer (mean degree 30.0, variance 160.0).
+  household-size distribution, mean ≈5.1) packed into local community
+  clusters (mean ≈45 persons) with small overlapping social groups, plus
+  a negative-binomial inter-community layer (mean degree 3.0, variance
+  120.0) preserving overdispersed contact structure (mean local
+  clustering ≈0.50; median radius-2 neighbourhood ≈94 individuals).
 - Time-varying transmission follows a daily effective reproduction number
   Rt(t) estimated from outbreak notifications with a Bayesian renewal model
   (Gamma generation interval, mean 15.3 days, SD 9.3 days), allocated through
@@ -63,9 +66,12 @@ regenerate the figures in `figures/final/`.
 | `run_paired_figure3c_figure4c.py` | Risk-compensation and immune-onset paired analyses |
 | `run_historical_robustness.py` | Historical robustness (2007 and 2012 outbreaks) |
 | `run_s4_independent_ve.py` | Independent infection/mortality vaccine-efficacy grid |
-| `build_production_network_cache.py` | Build the cached 100,000-person network |
+| `run_horizon_extension_paired.py` | Simulation-horizon extension (90 vs 180 days, matched seeds) |
+| `run_s3_delivery_timing.py` | Vaccination timing among eventual cases (delivery timing) |
+| `build_production_network_cache.py` | Build a cached 100,000-person network (`--topology original\|clustered`) |
 | `generate_pooled_supplementary_calibration.py` | Calibration trajectories (Supplementary Figure S2) |
 | `estimate_rt.py` | Reproduction-number estimation from notification data |
+| `estimate_adjusted_cfr.py` | Delay-adjusted case-fatality estimation |
 
 ## Repository layout
 

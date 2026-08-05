@@ -1,0 +1,9 @@
+{
+  "created_utc": "2026-08-05T18:56:20.816026+00:00",
+  "replicates": 500,
+  "seed_schedule": "2026131000+replicate, matched across strategies",
+  "classification": "state at vaccination among vaccinated eventual cases: 0=susceptible (before exposure), 1=exposed (during incubation), >=2 (after onset)",
+  "network_cache": "../../data_and_results/network_cache/production_network_clustered_20260803/network_000_seed_2026080301.npz",
+  "network_cache_sha256": "42133eb7a4c4d3c195e245dac38c6f8def018b73b38a4581149e2910db6eb905",
+  "vaccine_acceptability": 0.9
+}

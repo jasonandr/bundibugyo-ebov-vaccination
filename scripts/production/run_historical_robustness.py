@@ -38,7 +38,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 REPO = ROOT.parent.parent
 
-from ebola_stochastic_ring import generate_network, simulate_ring_vaccination
+from ebola_stochastic_ring import generate_network, generate_network_clustered, simulate_ring_vaccination
 
 N = 10_000
 HORIZON_DAYS = 90
@@ -96,16 +96,22 @@ def strategy_kwargs(name):
 
 WORKER_GRAPHS = {}
 WORKER_CFR = None
+ACCEPTANCE = 0.90
 
 
-def init_worker(network_seeds, base_cfr):
+def init_worker(network_seeds, base_cfr, topology="original", acceptance=0.90):
+    global ACCEPTANCE
+    ACCEPTANCE = acceptance
     global WORKER_CFR
     WORKER_CFR = base_cfr
     for setting, seed in network_seeds.items():
-        np.random.seed(seed)
-        WORKER_GRAPHS[setting] = generate_network(
-            N=N, household_mean=5.2, community_mean=30.0, community_variance=160.0
-        )
+        if topology == "clustered":
+            WORKER_GRAPHS[setting] = generate_network_clustered(N=N, seed=seed)
+        else:
+            np.random.seed(seed)
+            WORKER_GRAPHS[setting] = generate_network(
+                N=N, household_mean=5.2, community_mean=30.0, community_variance=160.0
+            )
 
 
 def run_chunk(task_spec):
@@ -128,7 +134,7 @@ def run_chunk(task_spec):
             sigmoidal_k=0.5,
             sigmoidal_d0=10.0,
             uptake=0.8,
-            vaccine_acceptability=1.0,
+            vaccine_acceptability=ACCEPTANCE,
             max_daily_traces=100,
             base_CFR=WORKER_CFR,
             initial_infected=15,
@@ -204,6 +210,8 @@ def main():
                         default=REPO / "data_and_results/outputs/historical_robustness_production_20260723")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--replicates", type=int, default=625)
+    parser.add_argument("--topology", choices=["original", "clustered"], default="original")
+    parser.add_argument("--acceptance", type=float, default=0.90)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite existing output directory: {args.output}")
@@ -220,7 +228,7 @@ def main():
     network_seeds = {name: cfg["network_seed"] for name, cfg in SETTINGS.items()}
     raw_rows = []
     with mp.Pool(args.workers, initializer=init_worker,
-                 initargs=(network_seeds, base_cfr)) as pool:
+                 initargs=(network_seeds, base_cfr, args.topology, args.acceptance)) as pool:
         for rows in pool.imap_unordered(run_chunk, specs):
             raw_rows.extend(rows)
     raw_rows.sort(key=lambda r: (r["setting"], r["strategy"], r["replicate"]))
@@ -253,7 +261,10 @@ def main():
         },
         "engine": "cpp (pooled daily onset-cohort allocator, use_cohort default)",
         "network": {
-            "generator": "generate_network (two-layer DHS household + negative-binomial community)",
+            "generator": ("generate_network_clustered (nested households in local community clusters + NB stubs)"
+                      if args.topology == "clustered" else
+                      "generate_network (two-layer DHS household + negative-binomial community)"),
+            "topology": args.topology,
             "N": N,
             "household_mean": 5.2,
             "community_mean": 30.0,
@@ -276,7 +287,7 @@ def main():
             "sigmoidal_k": 0.5, "sigmoidal_d0": 10.0,
             "initial_infected": 15, "initial_exposed": 15,
             "max_sim_time": HORIZON_DAYS, "max_daily_traces": 100,
-            "uptake": 0.8, "vaccine_acceptability": 1.0, "allow_pep": True,
+            "uptake": 0.8, "vaccine_acceptability": ACCEPTANCE, "allow_pep": True,
             "ring_radius": 2,
         },
         "strategies": {

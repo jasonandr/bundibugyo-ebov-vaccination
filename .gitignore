@@ -39,6 +39,8 @@ data_and_results/**/*.csv
 data_and_results/**/*chunk*
 data_and_results/**/*.npz
 !data_and_results/network_cache/production_network_20260722/**
+!data_and_results/network_cache/production_network_clustered_20260803/**
+!data_and_results/network_cache/production_network_clustered_mid_20260803/**
 !data_and_results/review_outputs/**
 data_and_results/**/*.npy
 data_and_results/**/*.pkl

@@ -103,6 +103,7 @@ def main():
     fig.tight_layout()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(args.output, dpi=300, facecolor="white", bbox_inches="tight")
+    fig.savefig(args.output.with_suffix(".pdf"), facecolor="white", bbox_inches="tight")
     print(f"wrote {args.output}")
 
 

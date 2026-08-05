@@ -10,7 +10,9 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[2]
-REVIEW = ROOT / "data_and_results/outputs/paired_figure_grids_20260722"
+GRIDS = ROOT / "data_and_results/outputs/paired_figure_grids_20260803"
+TIMING = ROOT / "data_and_results/outputs/delivery_timing_20260803"
+OUT = ROOT / "figures/final/Figure_4"
 
 
 def read(path):
@@ -23,11 +25,11 @@ def median(rows, key):
 
 
 def main():
-    paired = read(REVIEW / "raw/figure3ab_paired_20260722/fig3_community_ve_paired_raw.csv")
+    paired = read(GRIDS / "fig3_community_ve_paired_raw.csv")
     base_rows = [r for r in paired if float(r["coverage"]) == 0 and abs(float(r["ve"]) - .45) < 1e-8]
     base_deaths = median(base_rows, "base_deaths")
 
-    grid = read(REVIEW / "raw/community_coverage_delay_0_14_28_paired_20260722.csv")
+    grid = read(TIMING / "community_coverage_delay_0_14_28_paired_20260803.csv")
 
     def reduction(rows):
         if "mortality_reduction_pct" in rows[0]:
@@ -80,8 +82,10 @@ def main():
             ax.grid(axis="x", color="#E5E7EB")
 
     fig.tight_layout()
-    fig.savefig(REVIEW / "Figure_4_implementation_review.png", dpi=300, bbox_inches="tight", facecolor="white")
-    fig.savefig(REVIEW / "Figure_4_review.pdf", bbox_inches="tight", facecolor="white")
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(OUT.with_suffix(".png"), dpi=300, bbox_inches="tight", facecolor="white")
+    fig.savefig(OUT.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
+    print(f"Wrote {OUT.with_suffix('.png')} / {OUT.with_suffix('.pdf')}")
 
 
 if __name__ == "__main__":

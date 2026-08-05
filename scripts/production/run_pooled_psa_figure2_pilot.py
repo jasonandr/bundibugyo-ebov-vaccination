@@ -28,7 +28,7 @@ FIELDS = [
     "draw_id", "replicate_id", "simulation_seed", "scenario", "vaccine_efficacy",
     "rt_posterior_index", "incubation_mean", "infectious_mean", "detection_delay_base",
     "detection_delay_enhanced", "tracing_coverage_enhanced", "incubation_shape",
-    "infectious_shape", "cases", "deaths", "doses",
+    "infectious_shape", "vaccine_acceptance", "cases", "deaths", "doses",
 ]
 WORKER_GRAPH = None
 WORKER_PARAMS = None
@@ -43,9 +43,17 @@ def ramp(target, duration=15):
     return np.linspace(0.30, target, duration).tolist() + [target] * (HORIZON + 1 - duration)
 
 
-def lhs_draws(n_draws, n_rt_samples, seed):
-    """Archived PSA distributions, excluding the previously unused variance draw."""
+def lhs_draws(n_draws, n_rt_samples, seed, acceptance_seed=2026080401):
+    """Archived PSA distributions, excluding the previously unused variance draw.
+
+    Conditional vaccine acceptance is drawn from an independent 1-D
+    Latin-hypercube sequence (Uniform 0.75-0.95) so that the 9-dimensional
+    draw matrix is unchanged and runs remain paired with configurations that
+    fix acceptance at 1.0.
+    """
     unit = qmc.LatinHypercube(d=9, seed=seed).random(n=n_draws)
+    acc_unit = qmc.LatinHypercube(d=1, seed=acceptance_seed).random(n=n_draws)
+    acceptance = qmc.scale(acc_unit, [0.75], [0.95])
     return [
         {
             "draw_id": i,
@@ -58,6 +66,7 @@ def lhs_draws(n_draws, n_rt_samples, seed):
             "tracing_coverage_enhanced": float(qmc.scale(unit[i:i + 1, 6:7], [0.60], [0.90])[0, 0]),
             "incubation_shape": float(qmc.scale(unit[i:i + 1, 7:8], [1.0], [3.0])[0, 0]),
             "infectious_shape": float(qmc.scale(unit[i:i + 1, 8:9], [1.0], [3.0])[0, 0]),
+            "vaccine_acceptance": float(acceptance[i, 0]),
         }
         for i in range(n_draws)
     ]
@@ -122,7 +131,7 @@ def run_draw(task):
                 incubation_period=draw["incubation_mean"], infectious_period=draw["infectious_mean"],
                 ring_radius=sc["radius"], efficacy=sc["ve"], uptake=0.8,
                 reporting_rate=sc["report"], tracing_coverage=sc["trace"],
-                vaccine_acceptability=1.0, detection_delay=sc["delay"],
+                vaccine_acceptability=draw.get("vaccine_acceptance", 1.0), detection_delay=sc["delay"],
                 tracing_delay=sc["trace_delay"], max_daily_traces=100,
                 max_vaccines=sc["max_vaccines"], base_CFR=float(WORKER_PARAMS["base_CFR"]),
                 initial_infected=15, initial_exposed=15, max_sim_time=HORIZON,
@@ -149,6 +158,8 @@ def run():
     parser.add_argument("--rt-source", choices=("fitted-median", "posterior"), default="fitted-median",
                         help="Use the updated EpiNow2 median by default; posterior is permitted only for a verified matching draw file.")
     parser.add_argument("--seed", type=int, default=20260726)
+    parser.add_argument("--fixed-acceptance", type=float, default=None,
+                        help="If set, override the per-draw LHS acceptance draw with this fixed value.")
     parser.add_argument("--output-dir", type=Path,
                         default=Path("data_and_results/pooled_psa_figure2_pilot_20260722"))
     args = parser.parse_args()
@@ -171,6 +182,9 @@ def run():
 
     args.output_dir.mkdir(parents=True)
     draws = lhs_draws(args.draws, posterior.shape[0], args.seed)
+    if args.fixed_acceptance is not None:
+        for draw in draws:
+            draw["vaccine_acceptance"] = float(args.fixed_acceptance)
     raw_path = args.output_dir / "raw_replicates.csv"
     with raw_path.open("w", newline="") as raw_handle:
         writer = csv.DictWriter(raw_handle, fieldnames=FIELDS)
@@ -233,15 +247,23 @@ def run():
     with (args.output_dir / "figure2_values.csv").open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(summary[0]))
         writer.writeheader(); writer.writerows(summary)
+    cache_manifest = None
+    if args.network_cache:
+        sidecar = args.network_cache.with_suffix(".manifest.json")
+        if sidecar.exists():
+            cache_manifest = json.loads(sidecar.read_text())
     manifest = {
         "created_utc": datetime.now(timezone.utc).isoformat(), "draws": args.draws,
         "replicates_per_draw": args.replicates, "workers": args.workers,
         "total_runs_per_strategy": args.draws * args.replicates,
         "include_ring1": args.include_ring1,
         "network": {"N": N, "household_mean": 5.2, "community_mean": 30.0, "community_variance": 160.0,
-                    "network_seed": NETWORK_SEED, "cache_path": str(args.network_cache) if args.network_cache else None},
+                    "network_seed": NETWORK_SEED, "cache_path": str(args.network_cache) if args.network_cache else None,
+                    "cache_manifest": cache_manifest},
         "allocator": "daily pooled onset cohort", "waiting_times": "Gamma; LHS shapes Uniform(1,3)",
         "rt_source": args.rt_source,
+        "vaccine_acceptance": (f"fixed at {args.fixed_acceptance}" if args.fixed_acceptance is not None
+                               else "LHS draw, Uniform(0.75, 0.95), independent 1-D sequence seed 2026080401"),
         "cpp_sha256": sha256(ROOT / "ebola_stochastic_ring_cpp.cpp"),
         "wrapper_sha256": sha256(ROOT / "ebola_stochastic_ring.py"),
         "fitted_parameters_sha256": sha256(fitted_path),

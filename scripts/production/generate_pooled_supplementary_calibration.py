@@ -215,7 +215,8 @@ def main():
         "rt_source": args.rt_source,
         "allocator": "daily pooled onset cohort", "cpp_sha256": sha256(REPO / "scripts/production/ebola_stochastic_ring_cpp.cpp"),
         "wrapper_sha256": sha256(REPO / "scripts/production/ebola_stochastic_ring.py"),
-        "fitted_parameters_sha256": sha256(fitted_path), "rt_posterior_sha256": sha256(posterior_path),
+        "fitted_parameters_sha256": sha256(fitted_path),
+        "rt_posterior_sha256": sha256(posterior_path) if args.rt_source == "posterior" else None,
         "note": "S2 plots model onsets and reported confirmed cases together for calibration review; they are not identical surveillance quantities.",
     }
     (args.output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

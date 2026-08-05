@@ -284,6 +284,7 @@ public:
         int total_infected = 0;
         int total_deaths = 0;
         int total_vaccines = 0;
+        int total_detections = 0;
         double next_available_trace_time = 0.0;
         double tau_max = baseline_tau;
         std::vector<int> daily_deaths(max_sim_time + 2, 0);
@@ -582,6 +583,7 @@ public:
                 
                 if (t < vax_start_time) continue;
                 mark_touched(target);
+                total_detections++;
                 if (status[target] == 2) status[target] = 5; // ISO
 
                 // BFS for ring vaccination
@@ -703,6 +705,7 @@ public:
             res["total_infected"] = total_infected;
             res["total_deaths"] = total_deaths;
             res["total_vaccines"] = total_vaccines;
+            res["total_detections"] = total_detections;
             return res;
         }
 

@@ -68,6 +68,107 @@ def generate_network(N=10000, household_mean=5.0, community_mean=5.0, community_
     return G
 
 
+def generate_network_clustered(N=100000, household_size_dist=None,
+                               cluster_mean=45.0, cluster_sd=15.0,
+                               inner_lambda=1.2, inner_size_mean=7.0, inner_size_sd=2.0,
+                               stub_mean=3.0, stub_var=120.0, seed=None):
+    """Three-layer nested network with realistic local clustering.
+
+    Layer 1: fully connected household cliques (DRC DHS household-size
+    distribution), identical to `generate_network`.
+    Layer 2: households are packed whole into local community clusters
+    (village/neighbourhood scale); within each cluster, members are wired
+    through small overlapping groups (extended family, neighbour, work, and
+    caregiving groups), producing empirical-range clustering (0.4-0.5) and
+    radius-2 neighbourhoods on the scale of field vaccination rings.
+    Layer 3: negative-binomial inter-cluster stubs preserve the overdispersed
+    degree tail required for superspreading.
+
+    Returns an nx.Graph with the same node/edge attribute schema as
+    `generate_network` ('household' node attribute; household edges
+    weight=3.0, all other edges weight=1.0).
+    """
+    rng = np.random.default_rng(seed)
+    adj = [set() for _ in range(N)]
+
+    # Layer 1: household cliques
+    if household_size_dist is None:
+        household_size_dist = [0.061, 0.097, 0.129, 0.147, 0.145, 0.128, 0.103, 0.076, 0.049, 0.065]
+    hh_p = np.array(household_size_dist) / sum(household_size_dist)
+    households = []
+    hh_dict = {}
+    idx = 0
+    while idx < N:
+        size = min(int(rng.choice(np.arange(1, 11), p=hh_p)), N - idx)
+        households.append(list(range(idx, idx + size)))
+        idx += size
+    for hh_counter, members in enumerate(households):
+        for u in members:
+            hh_dict[u] = hh_counter
+            adj[u].update(v for v in members if v != u)
+
+    # Layer 2: pack whole households into local community clusters, then wire
+    # within-cluster small-group cliques
+    order = rng.permutation(len(households))
+    clusters = []
+    current, current_n = [], 0
+    target = max(20, int(round(rng.normal(cluster_mean, cluster_sd))))
+    for h in order:
+        hh = households[h]
+        if current_n + len(hh) > target and current:
+            clusters.append(current)
+            current, current_n = [], 0
+            target = max(20, int(round(rng.normal(cluster_mean, cluster_sd))))
+        current.extend(hh)
+        current_n += len(hh)
+    if current:
+        clusters.append(current)
+
+    for members in clusters:
+        members = np.array(members)
+        m = len(members)
+        n_mem = rng.poisson(inner_lambda, m) + 1
+        M = int(n_mem.sum())
+        sizes = []
+        total = 0
+        while total < M:
+            s = int(round(rng.normal(inner_size_mean, inner_size_sd)))
+            s = max(3, min(s, 15))
+            sizes.append(s)
+            total += s
+        slots = np.repeat(members, n_mem)
+        rng.shuffle(slots)
+        p = 0
+        for s in sizes:
+            grp = slots[p:p + s]
+            p += s
+            for u in np.unique(grp):
+                adj[u].update(int(v) for v in grp if v != u)
+
+    # Layer 3: inter-cluster negative-binomial stubs (heavy tail, long-range)
+    r_nb = stub_mean ** 2 / (stub_var - stub_mean)
+    p_nb = stub_mean / stub_var
+    ks = rng.negative_binomial(r_nb, p_nb, N)
+    if ks.sum() % 2:
+        ks[0] += 1
+    stubs = np.repeat(np.arange(N), ks)
+    rng.shuffle(stubs)
+    for u, v in zip(stubs[0::2].tolist(), stubs[1::2].tolist()):
+        if u != v:
+            adj[u].add(v)
+            adj[v].add(u)
+
+    G = nx.Graph()
+    G.add_nodes_from(range(N))
+    for u in range(N):
+        for v in adj[u]:
+            if u < v:
+                weight = 3.0 if hh_dict[u] == hh_dict[v] else 1.0
+                G.add_edge(u, v, weight=weight)
+    nx.set_node_attributes(G, hh_dict, 'household')
+    return G
+
+
 def simulate_ring_vaccination(G, rt_array=None, baseline_tau=0.25, 
                               incubation_period=8.5, infectious_period=6.0,
                               ring_radius=1, efficacy=0.30, immune_delay=10.0, uptake=0.8,

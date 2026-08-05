@@ -11,7 +11,7 @@ from scipy.ndimage import gaussian_filter
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
-SUMMARY = REPO / "data_and_results/outputs/s4_independent_ve_fine_20260723/s4_grid_summary.csv"
+SUMMARY = REPO / "data_and_results/outputs/s4_independent_ve_fine_20260803/s4_grid_summary.csv"
 import os
 OUT = REPO / os.environ.get("S4_OUT", "figures/final/Supplementary_Figure_S4.png")
 
@@ -49,6 +49,7 @@ def main():
     ax.set_ylabel("Vaccine effectiveness against mortality (%)")
     fig.tight_layout()
     fig.savefig(OUT, dpi=300)
+    fig.savefig(OUT.with_suffix(".pdf"))
     print(f"Wrote {OUT}")
 
     print(f"Base arm (no vax) median deaths: {float(base['median_deaths']):.0f}")

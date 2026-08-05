@@ -1,0 +1,20 @@
+{
+  "created_utc": "2026-08-04T13:30:13.371011+00:00",
+  "network_seed": 2026080301,
+  "N": 100000,
+  "household_mean": 5.2,
+  "community_mean": 30.0,
+  "community_variance": 160.0,
+  "topology": "clustered",
+  "clustered_params": {
+    "cluster_mean": 45.0,
+    "cluster_sd": 15.0,
+    "inner_lambda": 1.2,
+    "inner_size_mean": 7.0,
+    "inner_size_sd": 2.0,
+    "stub_mean": 3.0,
+    "stub_var": 120.0
+  },
+  "directed_adjacency_entries": 1835486,
+  "network_builder_sha256": "6904c301d059c62b907c10ead043ab349004edc7d30f5bb64e42e7a18dd2b10c"
+}

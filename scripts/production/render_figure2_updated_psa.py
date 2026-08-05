@@ -17,7 +17,7 @@ ROWS = [
     ("comm_base_80", "Community Vax 80% (Base Ops)", "#21918c"),
     ("no_vax_enh_ops", "Enhanced Ops Alone", "#56616f"),
     ("vax_enh_ops", "Enhanced Ops + Ring 2 Vax", "#2878B5"),
-    ("incremental_ring_vax", "Incremental Ring 2 Vax (vs Enh)", "#2878B5"),
+    ("incremental_ring_vax", "Incremental Ring 2 Vax (vs Enh)", "#CA6D4B"),
 ]
 
 
@@ -65,6 +65,7 @@ def main():
     fig.tight_layout()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(args.output, dpi=300, facecolor="white", bbox_inches="tight")
+    fig.savefig(args.output.with_suffix(".pdf"), facecolor="white", bbox_inches="tight")
 
 
 if __name__ == "__main__":

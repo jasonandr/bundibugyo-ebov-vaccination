@@ -179,13 +179,14 @@ def run():
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--output-dir", type=Path,
                         default=REPO / "data_and_results" / "outputs" / "extinction_paired_20260723")
+    parser.add_argument("--network-cache", type=Path, default=NETWORK_CACHE)
     args = parser.parse_args()
     if args.replicates < 1 or args.workers < 1:
         raise ValueError("Use at least one replicate and one worker")
     if args.output_dir.exists():
         raise FileExistsError(f"Refusing to overwrite existing output directory: {args.output_dir}")
-    if not NETWORK_CACHE.exists():
-        raise FileNotFoundError(f"Network cache not found: {NETWORK_CACHE}")
+    if not args.network_cache.exists():
+        raise FileNotFoundError(f"Network cache not found: {args.network_cache}")
 
     params = json.loads(FITTED_PATH.read_text())
     args.output_dir.mkdir(parents=True)
@@ -197,13 +198,13 @@ def run():
         writer.writeheader()
         tasks = range(args.replicates)
         if args.workers == 1:
-            initialise_worker(params, str(NETWORK_CACHE))
+            initialise_worker(params, str(args.network_cache))
             result_iter = map(run_replicate, tasks)
             for result in result_iter:
                 writer.writerows(result)
         else:
             with mp.Pool(args.workers, initializer=initialise_worker,
-                         initargs=(params, str(NETWORK_CACHE))) as pool:
+                         initargs=(params, str(args.network_cache))) as pool:
                 done = 0
                 for result in pool.imap_unordered(run_replicate, tasks):
                     writer.writerows(result)
@@ -254,8 +255,8 @@ def run():
                           for name, sc in build_scenarios().items()},
         },
         "network": {
-            "cache_path": str(NETWORK_CACHE),
-            "network_cache_sha256": sha256(NETWORK_CACHE),
+            "cache_path": str(args.network_cache),
+            "network_cache_sha256": sha256(args.network_cache),
         },
         "fitted_parameters_path": str(FITTED_PATH),
         "fitted_parameters_sha256": sha256(FITTED_PATH),

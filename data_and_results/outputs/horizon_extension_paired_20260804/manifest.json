@@ -1,0 +1,30 @@
+{
+  "created_utc": "2026-08-04T21:26:31.634967+00:00",
+  "replicates": 500,
+  "horizons": [
+    90,
+    180
+  ],
+  "seed_schedule": "2026080400+replicate; same seed across horizons (exact continuation) and across strategies (paired)",
+  "rt_extension": "Rt held at final estimated value beyond the estimation window",
+  "network_cache": "/Users/jasonandrews/repos/ebola vaccination modeling/data_and_results/network_cache/production_network_clustered_20260803/network_000_seed_2026080301.npz",
+  "network_cache_sha256": "42133eb7a4c4d3c195e245dac38c6f8def018b73b38a4581149e2910db6eb905",
+  "base_parameters": {
+    "incubation_period": 8.5,
+    "infectious_period": 6.0,
+    "incubation_shape": 2.0,
+    "infectious_shape": 2.0,
+    "base_CFR": 0.4539079029615015,
+    "efficacy": 0.45,
+    "sigmoidal_k": 0.5,
+    "sigmoidal_d0": 10.0,
+    "initial_infected": 15,
+    "initial_exposed": 15,
+    "max_daily_traces": 100,
+    "uptake": 0.8,
+    "vaccine_acceptability": 0.9,
+    "allow_pep": true,
+    "baseline_tau": 0.25,
+    "ring_radius": 2
+  }
+}

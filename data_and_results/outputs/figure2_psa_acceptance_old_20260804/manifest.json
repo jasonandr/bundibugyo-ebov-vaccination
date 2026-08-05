@@ -1,0 +1,35 @@
+{
+  "created_utc": "2026-08-04T19:06:52.149269+00:00",
+  "draws": 200,
+  "replicates_per_draw": 50,
+  "workers": 8,
+  "total_runs_per_strategy": 10000,
+  "include_ring1": true,
+  "network": {
+    "N": 100000,
+    "household_mean": 5.2,
+    "community_mean": 30.0,
+    "community_variance": 160.0,
+    "network_seed": 2026072501,
+    "cache_path": "data_and_results/network_cache/production_network_20260722/network_000_seed_2026072501.npz",
+    "cache_manifest": {
+      "created_utc": "2026-07-22T18:34:57.819253+00:00",
+      "network_seed": 2026072501,
+      "N": 100000,
+      "household_mean": 5.2,
+      "community_mean": 30.0,
+      "community_variance": 160.0,
+      "directed_adjacency_entries": 3531826,
+      "network_builder_sha256": "1c0ba2c666aa3ec86d50d1c0a5eb5c418a0545ae47d57ee8e16904c765b2c3c2"
+    }
+  },
+  "allocator": "daily pooled onset cohort",
+  "waiting_times": "Gamma; LHS shapes Uniform(1,3)",
+  "rt_source": "fitted-median",
+  "vaccine_acceptance": "LHS draw, Uniform(0.75, 0.95), independent 1-D sequence seed 2026080401",
+  "cpp_sha256": "e967044a96dd9606771076d2635e38dea8d4f00cde6b4b00f1b0ba14d8ad9e89",
+  "wrapper_sha256": "6904c301d059c62b907c10ead043ab349004edc7d30f5bb64e42e7a18dd2b10c",
+  "fitted_parameters_sha256": "4489da72a931dd6d2df5bfbab61e879b34f77ad7878e1e886eaef7e64b290b49",
+  "rt_posterior_sha256": null,
+  "note": "Pilot only. Community-degree variance is held at 160 because network topology is fixed within this pilot."
+}

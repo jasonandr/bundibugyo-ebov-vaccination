@@ -1,0 +1,103 @@
+{
+  "created_utc": "2026-08-04T13:45:05.723133+00:00",
+  "started_utc": "2026-08-04T13:44:58.933587+00:00",
+  "design": {
+    "strategies": [
+      "no_vax_base_ops",
+      "no_vax_enh_ops",
+      "comm_base_40",
+      "comm_base_60"
+    ],
+    "replicates_per_strategy": 500,
+    "base_seed": 2026073000,
+    "seed_schedule": "2026073000+i for replicate i, matched across strategies",
+    "workers": 8,
+    "horizon_days": 90,
+    "extinction_definition": "all ever-infected persons have recovery_or_death_time != -1 (unset sentinel; negative seed removal times are resolved events) and max(recovery_or_death_time) < 90",
+    "base_parameters": {
+      "incubation_mean": 8.5,
+      "infectious_mean": 6.0,
+      "incubation_shape": 2.0,
+      "infectious_shape": 2.0,
+      "base_CFR": 0.4539079029615015,
+      "vaccine_efficacy_community": 0.45,
+      "sigmoidal_k": 0.5,
+      "sigmoidal_d0": 10.0,
+      "initial_infected": 15,
+      "initial_exposed": 15,
+      "max_daily_traces": 100,
+      "uptake": 0.8,
+      "vaccine_acceptability": 1.0,
+      "allow_pep": true,
+      "baseline_tau": 0.25
+    },
+    "scenarios": {
+      "no_vax_base_ops": {
+        "reporting_rate": "array len 91: 0.3..0.3",
+        "tracing_coverage": "array len 91: 0.3..0.3",
+        "detection_delay": 4.0,
+        "tracing_delay": 2.0,
+        "ring_radius": 2,
+        "efficacy": 0.0,
+        "max_vaccines": 0,
+        "community_vax_coverage": 0.0,
+        "community_vax_trigger": 0,
+        "community_vax_delay": -1.0,
+        "community_vax_rollout_days": 0.0
+      },
+      "no_vax_enh_ops": {
+        "reporting_rate": "array len 91: 0.3..0.7",
+        "tracing_coverage": "array len 91: 0.3..0.8",
+        "detection_delay": 2.0,
+        "tracing_delay": 1.0,
+        "ring_radius": 2,
+        "efficacy": 0.0,
+        "max_vaccines": 0,
+        "community_vax_coverage": 0.0,
+        "community_vax_trigger": 0,
+        "community_vax_delay": -1.0,
+        "community_vax_rollout_days": 0.0
+      },
+      "comm_base_40": {
+        "reporting_rate": "array len 91: 0.3..0.3",
+        "tracing_coverage": "array len 91: 0.3..0.3",
+        "detection_delay": 4.0,
+        "tracing_delay": 2.0,
+        "ring_radius": 2,
+        "efficacy": 0.45,
+        "max_vaccines": 0,
+        "community_vax_coverage": 0.4,
+        "community_vax_trigger": 1,
+        "community_vax_delay": 0.0,
+        "community_vax_rollout_days": 14.0
+      },
+      "comm_base_60": {
+        "reporting_rate": "array len 91: 0.3..0.3",
+        "tracing_coverage": "array len 91: 0.3..0.3",
+        "detection_delay": 4.0,
+        "tracing_delay": 2.0,
+        "ring_radius": 2,
+        "efficacy": 0.45,
+        "max_vaccines": 0,
+        "community_vax_coverage": 0.6,
+        "community_vax_trigger": 1,
+        "community_vax_delay": 0.0,
+        "community_vax_rollout_days": 14.0
+      }
+    }
+  },
+  "network": {
+    "cache_path": "data_and_results/network_cache/production_network_clustered_20260803/network_000_seed_2026080301.npz",
+    "network_cache_sha256": "42133eb7a4c4d3c195e245dac38c6f8def018b73b38a4581149e2910db6eb905"
+  },
+  "fitted_parameters_path": "/Users/jasonandrews/repos/ebola vaccination modeling/data_and_results/fitted_parameters.json",
+  "fitted_parameters_sha256": "4489da72a931dd6d2df5bfbab61e879b34f77ad7878e1e886eaef7e64b290b49",
+  "cpp_sha256": "a7393963bcd1068e6969b1fb3ddfbc4de75cb20459170895b4e6ac6422a53655",
+  "wrapper_sha256": "6904c301d059c62b907c10ead043ab349004edc7d30f5bb64e42e7a18dd2b10c",
+  "runner_sha256": "45d1c73db2dc8ab5c58df212cfa93417bf8199155cb799eea7ce1527190b9b9b",
+  "engine": "cpp (daily pooled onset-cohort allocator, use_cohort=True), return_mechanism=True",
+  "outputs": {
+    "raw": "data_and_results/outputs/extinction_paired_20260803/extinction_paired_raw.csv",
+    "summary": "data_and_results/outputs/extinction_paired_20260803/extinction_summary.csv"
+  }
+}
